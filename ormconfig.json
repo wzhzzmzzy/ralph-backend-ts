@@ -1,0 +1,9 @@
+{
+  "type": "mysql",
+  "host": "59.110.156.20",
+  "port": 3306,
+  "username": "dev",
+  "password": "XKpD3@McDg",
+  "database": "nmb-test",
+  "synchronize": true
+}
