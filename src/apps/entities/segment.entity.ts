@@ -3,9 +3,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn, ManyToOne,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
-import { User } from './user.entity';
+import { User, Reply } from './';
 
 export enum SegmentStatus {
   SAGE = 'sage',
@@ -19,10 +21,9 @@ export class Segment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(type => User, user => user.id, {
+  @ManyToOne(() => User, user => user.id, {
     cascade: true
   })
-  @JoinTable()
   user: User;
 
   @Column('varchar', {
@@ -37,11 +38,8 @@ export class Segment {
   })
   channel: string;
 
-  @Column('text', {
-    default: '',
-    nullable: true
-  })
-  image: string;
+  @OneToMany(() => Reply, reply => reply.segment)
+  replies: Reply
 
   @Column({
     type: 'enum',
@@ -52,7 +50,6 @@ export class Segment {
   status: SegmentStatus;
 
   @Column('text', {
-    default: '',
     nullable: true,
     comment: '提示信息，集中串等'
   })

@@ -1,57 +1,57 @@
 -- 用户
-CREATE TABLE IF NOT EXISTS user (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    slot INTEGER DEFAULT 0,                   -- 饼干槽数
-    email VARCHAR(320) NOT NULL UNIQUE,
-    cookies VARCHAR(100) DEFAULT NULL UNIQUE, -- 饼干，按 cookie1;cookie2;cookie3;cookie4;cookie5; 排列
-    password VARCHAR(32) NOT NULL,
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) AUTO_INCREMENT = 1;
+create table user
+(
+    id         int auto_increment primary key,
+    cookies    text                                                               null,
+    slot       int                                   default 5                    not null,
+    email      varchar(320)                                                       not null,
+    password   varchar(32)                                                        not null,
+    createTime datetime(6)                           default CURRENT_TIMESTAMP(6) not null,
+    statue     enum ('normal', 'admin', 'anonymous') default 'normal'             not null comment '用户状态',
+    constraint
+        unique (email)
+);
 
 -- 串
-CREATE TABLE IF NOT EXISTS segment (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    user_id INTEGER DEFAULT NULL,
-    cookie CHAR(7) NOT NULL,
-    warning TEXT DEFAULT NULL,
-    channel VARCHAR(20) NOT NULL,
-    sage BOOL DEFAULT FALSE,
-    deleted BOOL DEFAULT FALSE,
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    sage_time TIMESTAMP DEFAULT NULL,
-    deleted_time TIMESTAMP DEFAULT NULL,
-
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
-) AUTO_INCREMENT = 1;
+create table segment
+(
+    id          int auto_increment primary key,
+    cookie      varchar(7)                                                               not null comment '发串饼干',
+    channel     varchar(20)                                                              not null comment '发串频道',
+    status      enum ('sage', 'deleted', 'normal', 'fixed') default 'normal'             not null comment '串的状态',
+    warning     text                                                                     null comment '提示信息，集中串等',
+    createTime  datetime(6)                                 default CURRENT_TIMESTAMP(6) not null,
+    updateTime  datetime(6)                                 default CURRENT_TIMESTAMP(6) not null,
+    sageTime    timestamp                                                                null,
+    deletedTime timestamp                                                                null,
+    userId      int                                                                      null,
+    constraint foreign key (userId) references user (id)
+);
 
 -- 回复
-CREATE TABLE IF NOT EXISTS reply (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    user_id INTEGER DEFAULT NULL,
-    cookie CHAR(7) DEFAULT NULL,
-    segment_id INTEGER NOT NULL,
-    title TEXT DEFAULT NULL,
-    text TEXT NOT NULL,
-    image TEXT DEFAULT NULL,
-    deleted BOOL DEFAULT FALSE,
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+create table reply
+(
+    id        int auto_increment primary key,
+    title     text              null,
+    text      text              not null,
+    image     text              not null,
+    cookie    varchar(7)        not null comment '发串饼干',
+    deleted   tinyint default 0 not null comment '是否已删除',
+    userId    int               null,
+    segmentId int               null,
+    constraint
+        foreign key (segmentId) references segment (id),
+        foreign key (userId) references user (id)
+);
 
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
-    FOREIGN KEY (segment_id) REFERENCES segment(id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
-
--- 举报
-CREATE TABLE IF NOT EXISTS tip_off (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    user_id INTEGER DEFAULT NULL,
-    cookie CHAR(7) NOT NULL,
-    reason TEXT NOT NULL,
-    segment_id INTEGER NOT NULL,
-    reply_id INTEGER NOT NULL,
-    status INTEGER DEFAULT 0,
-
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
-    FOREIGN KEY (segment_id) REFERENCES segment(id) ON DELETE CASCADE,
-    FOREIGN KEY (reply_id) REFERENCES reply(id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
+-- 反馈
+create table issue
+(
+    id        int auto_increment primary key,
+    issueType enum ('tipOff', 'issue') default 'issue' not null comment '反馈类型',
+    reason    text                                     not null,
+    segmentId int                                      null,
+    userId    int                                      null,
+    constraint
+        foreign key (userId) references user (id)
+);
