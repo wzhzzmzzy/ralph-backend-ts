@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateSegmentDto } from './dto/segment.dto';
-import { Segment } from './entities/segment.entity';
 import { Repository } from 'typeorm';
+
+import { CreateSegmentDto } from '../dto/database.dto';
+import { Segment } from '../entities';
 
 @Injectable()
 export class SegmentService {
   constructor(
     @InjectRepository(Segment)
-    private readonly segmentRepo: Repository<Segment>
+    private readonly segmentRepository: Repository<Segment>
   ) {}
 
   create(createSegmentDto: CreateSegmentDto) {
@@ -16,10 +17,14 @@ export class SegmentService {
     Object.keys(createSegmentDto).forEach(key => {
       segment[key] = createSegmentDto[key];
     })
-    return this.segmentRepo.save(segment);
+    return this.segmentRepository.save(segment);
   }
 
   find(id: number): Promise<Segment> {
-    return this.segmentRepo.findOne(id);
+    return this.segmentRepository.findOne(id);
+  }
+
+  findAll(): Promise<Segment[]> {
+    return this.segmentRepository.find();
   }
 }

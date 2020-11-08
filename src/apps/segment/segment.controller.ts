@@ -1,12 +1,9 @@
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SegmentService } from './segment.service';
-import { CreateSegmentDto, FindOneParam } from './dto/segment.dto';
-import { Segment } from './entities/segment.entity';
+import { CreateSegmentDto } from '../dto/database.dto';
+import { FindOneParam } from '../dto/general.dto';
+import { Segment } from '../entities';
 
 @ApiTags('串')
 @Controller('segment')

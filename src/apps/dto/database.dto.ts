@@ -34,7 +34,14 @@ export class CreateSegmentDto {
   readonly image: string;
 }
 
-export class FindOneParam {
-  @IsNumberString()
-  id: number
+export class CreateUserDto {
+  @ApiProperty({
+    description: '用户邮箱'
+  })
+  readonly email: string
+
+  @ApiProperty({
+    description: '用户密码（MD5）'
+  })
+  password: string;
 }

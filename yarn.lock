@@ -626,7 +626,7 @@
     lodash "4.17.20"
     path-to-regexp "3.2.0"
 
-"@nestjs/testing@^7.0.0":
+"@nestjs/testing@^7.5.1":
   version "7.5.1"
   resolved "https://registry.npm.taobao.org/@nestjs/testing/download/@nestjs/testing-7.5.1.tgz?cache=0&sync_timestamp=1604323516458&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40nestjs%2Ftesting%2Fdownload%2F%40nestjs%2Ftesting-7.5.1.tgz#8e537852512a2bfc5824b846aafc649b63a8d48e"
   integrity sha1-jlN4UlEqK/xYJLhGqvxkm2Oo1I4=
